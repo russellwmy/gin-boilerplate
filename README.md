@@ -1,10 +1,11 @@
 # Requirements
 Docker
 
-# Run
-```docker-componse up redis -d```
-```docker-componse up mysql -d```
-```docker-componse up web```
+# Get Start
+- run ```docker-componse up redis -d```
+- run ```docker-componse up mysql -d```
+- change 192.168.0.106 to your internal ip in docker-compose.yml
+- run ```docker-componse up web```
 
 goto http://localhost:3000/todos
 
