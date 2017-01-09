@@ -1,5 +1,6 @@
 # Requirements
-Docker
+- Docker: https://www.docker.com/products/overview
+
 
 # Get Start
 - run ```docker-componse up redis -d```
