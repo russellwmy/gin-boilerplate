@@ -1,0 +1,54 @@
+version: '2'
+services:
+  mysql:
+    restart: always
+    image: mysql/mysql-server:latest
+    container_name: app-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker_build/mysql/conf:/etc/mysql/conf.d
+      - ./docker_build/mysql/data:/var/lib/mysql
+      - ./docker_build/mysql/init.d:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: app
+
+  redis:
+    restart: always
+    image: redis:latest
+    container_name: app-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker_build/redis/data:/data
+    command: redis-server --requirepass password --appendonly yes
+
+  web:
+    restart: always
+    build: "."
+    container_name: app
+    expose:
+      - "3000"
+    volumes:
+      - ./:/opt/app
+    environment:
+      DEBUG: 'true'
+      PORT: 3000
+      REDIS_URI: localhost:6379
+      REDIS_PASSOWRD: password
+      CONNECTION_STRING: root:123456@tcp(192.168.0.106:3306)/app?charset=utf8&parseTime=True
+    ports:
+      - "3000:3000"
+    links:
+      - mysql
+      - redis
+    depends_on:
+       - mysql
+       - redis
+    # stdin_open: true
+    # tty: true
+    # command: bash
+    command: go run /opt/app/main.go
